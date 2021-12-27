@@ -99,14 +99,17 @@ function Payment() {
     }
 
     return (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>Buy React now!</p>
+        <div className="BGGradeAllergy">
+  <div className="TopMarginAllergy"></div>
+
+  <div className="box" id="heading">
+      <h1 className="Heading"> Paying Form</h1>{" "}
+  </div>
+
                 <button className="App-link" onClick={displayRazorpay}>
                     Pay ₹50
                 </button>
-            </header>
+            
         </div>
     );
 
