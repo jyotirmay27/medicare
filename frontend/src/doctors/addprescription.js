@@ -51,7 +51,7 @@ function InputingPers() {
       }
       try {
         const responseData = await sendRequest(
-          'http://localhost:5000/api/places/prescription',
+          'https://localhost:5000/api/places/prescription',
           'POST',
           JSON.stringify({
             patID:patID,

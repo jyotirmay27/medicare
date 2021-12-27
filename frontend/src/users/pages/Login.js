@@ -21,7 +21,7 @@ const Login =() =>{
     var password = document.getElementById('pass').value;
     try {
       const responseData = await sendRequest(
-        'http://localhost:5000/api/users/login',
+        'https://localhost:5000/api/users/login',
         'POST',
         JSON.stringify({
           email: email,
@@ -44,6 +44,7 @@ const routeChange= () =>{
               };
 if(error)
 {
+    console.log(error);
   return (
   <Alert style={{ margin:"0px", zIndex:"100" ,marginLeft:"auto", marginRight:"auto"}}  variant="danger">
    <Alert.Heading>Login Error</Alert.Heading>

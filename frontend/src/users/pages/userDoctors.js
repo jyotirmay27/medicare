@@ -17,7 +17,7 @@ useEffect(()=> {
   const fetchPlaces = async() =>{
     try{
       const responseData = await sendRequest(
-      `http://localhost:5000/api/places/users/${userId}/yourdoctors`
+      `https://localhost:5000/api/places/users/${userId}/yourdoctors`
       );
       setLoadedDoc(responseData.User);
     }

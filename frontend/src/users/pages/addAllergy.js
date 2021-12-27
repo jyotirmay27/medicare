@@ -18,7 +18,7 @@ const Allergy = () => {
 
     try {
         await sendRequest(
-            'http://localhost:5000/api/users/allergy',
+            'https://localhost:5000/api/users/allergy',
             'POST', 
             JSON.stringify({
               from: from,

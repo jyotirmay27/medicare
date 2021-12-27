@@ -9,6 +9,8 @@ const Vital= require('../models/Vitals');
 const Allergy=require('../models/Allergy');
 const Combo = require('../models/Combo');
 const Doctor = require('../models/Doctors');
+const Rating = require('../models/Rating');
+const Reciepts = require('../models/Reciepts');
 
 
 // this fetch the vitals for the particular user
@@ -193,6 +195,50 @@ using it . */
         }
       
         res.json({ prescription: med.toObject({ getters: true }) });
+      };
+      const getDoctorById =async(req,res,next)=>{
+        const docId=req.params.did;
+        let med ;
+        try {
+            med  = await Doctor.findOne({ email: docId })// this will search the particular medicine in database
+        } catch (err) {
+          const error = new HttpError(
+            'Fetching places failed, please try again later',
+            500
+          );
+          return next(error);
+        }
+      
+        if (!med  || med .length === 0) {
+          return next(
+            new HttpError('Could not find places for the provided user id.', 404)
+          );
+        }
+      
+        res.json({ doctor: med.toObject({ getters: true }) });
+      };
+
+      const getReviewById =async(req,res,next)=>{
+        const docId=req.params.did;
+        let med ;
+        try {
+            med  = await Rating.find({ doctor: docId })// this will search the particular medicine in database
+        } catch (err) {
+          const error = new HttpError(
+            'Fetching places failed, please try again later',
+            500
+          );
+          return next(error);
+        }
+      
+        if (!med  || med .length === 0) {
+          return next(
+            new HttpError('Could not find places for the provided user id.', 404)
+          );
+        }
+      
+        // res.json({ doctor: med.toObject({ getters: true }) });
+        res.json({Review: med.map(pres => pres.toObject({ getters: true }))});
       };
   
 // this functin will store the vital entries entered by the user
@@ -395,3 +441,5 @@ exports.getMedicinesById=getMedicinesById;
 exports.getAllAllergy=getAllAllergy;
 exports.getYourDoctors=getYourDoctors;
 exports.getAllDocPrescriptions =getAllDocPrescriptions;
+exports.getDoctorById=getDoctorById;
+exports.getReviewById=getReviewById

@@ -16,7 +16,7 @@ const Doctors = () =>{
       const fetchUsers = async () => {
    
         try {
-          const responseData = await sendRequest('http://localhost:5000/api/doctors/all');
+          const responseData = await sendRequest('https://localhost:5000/api/doctors/all');
   
   
           setLoadedDoctors(responseData.doctors);

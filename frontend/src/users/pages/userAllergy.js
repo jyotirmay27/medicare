@@ -16,7 +16,7 @@ useEffect(()=> {
   const fetchPlaces = async() =>{
     try{
         const responseData = await sendRequest(
-            `http://localhost:5000/api/places/users/${userId}/allergies`
+            `https://localhost:5000/api/places/users/${userId}/allergies`
             );
             setLoadedAllergy(responseData.allergies);
     }

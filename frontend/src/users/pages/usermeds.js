@@ -17,7 +17,7 @@ useEffect(()=> {
   const fetchPlaces = async() =>{
     try{
       const responseData = await sendRequest(
-      `http://localhost:5000/api/places/users/${userId}/medicines`
+      `https://localhost:5000/api/places/users/${userId}/medicines`
       );
       console.log(responseData.Medicines);
       setLoadedMeds(responseData.Medicines);

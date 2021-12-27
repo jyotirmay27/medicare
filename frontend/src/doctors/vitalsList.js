@@ -43,7 +43,7 @@ var pulse=[];
             }  
         }
     }
-    if(props.items.length.length >=7)
+    if(props.items.length >=7)
     {
         props.items.length=props.items.length.slice(Math.max(props.items.length.length - 7, 0))
     }

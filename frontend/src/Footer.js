@@ -31,9 +31,7 @@ export const Footer = () => {
                         <br />
                         Parth Mittal
                         <br />
-                        Abhinav Goel
-                        <br />
-                        Varnika Hotwani
+                        Ishan sharma
                         {/* <Row>
                             <Col sm={6}>Jyotirmay Jain</Col>
                             <Col sm={6}>Parth Mittal</Col>

@@ -25,7 +25,7 @@ const Appointment = () => {
         var docEmail = docId;
         try {
             await sendRequest(
-                "http://localhost:5000/api/users/appointment",
+                "https://localhost:5000/api/users/appointment",
                 "POST",
                 JSON.stringify({
                     date: date,
@@ -39,7 +39,26 @@ const Appointment = () => {
             document.getElementById("date").value = "";
             document.getElementById("name").value = "";
             document.getElementById("email").value = "";
-        } catch (err) {}
+        } catch (err) {
+            // <Alert
+            //     style={{
+            //         margin: "0px",
+            //         marginLeft: "auto",
+            //         marginRight: "auto",
+            //     }}
+            //     show={show}
+            //     variant="success"
+            // >
+            //     <Alert.Heading>{err}</Alert.Heading>
+                
+            //     <hr />
+            //     <div className="d-flex justify-content-end">
+            //         <Button onClick={routeChange} variant="outline-success">
+            //             Head back to home
+            //         </Button>
+            //     </div>
+            // </Alert>
+        }
     };
 
     const routeChange = () => {

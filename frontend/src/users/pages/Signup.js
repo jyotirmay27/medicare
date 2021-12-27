@@ -20,7 +20,7 @@ function Signup() {
     var name =document.getElementById('name').value;
     try {
       const responseData = await sendRequest(
-        'http://localhost:5000/api/users/signup',
+        'https://localhost:5000/api/users/signup',
         'POST',
         JSON.stringify({
           name: name,

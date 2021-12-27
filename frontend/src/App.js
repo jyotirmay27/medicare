@@ -11,6 +11,7 @@ import Allergy from './users/pages/addAllergy';
 import DoctorSignup from './doctors/DoctorSignup';
 import DoctorLogin from './doctors/DoctorLogin';
 import {Hello} from './users/pages/prescriptiondisplay';
+import {DoctorProfile} from './users/pages/docprofile';
 import MainNavigation from './shared/components/navigation/MainNavigation';
 import { AuthContext } from './shared/util/AuthContext';
 import { DocContext } from './shared/util/DocContext';
@@ -21,6 +22,10 @@ import {Footer} from './Footer';
 import {FrontPage} from './FrontPage';
 import PatientAllergy from './doctors/userAllergy';
 import Appointment from './users/pages/Appointment';
+import Rating from './shared/components/UIElements/rating';
+import Payment from './users/pages/paystep1';
+import ConfirmAppointment from './users/pages/confirmAppointment';
+import DenyAppointment from './users/pages/denyappointment';
 let logoutTimer;
 
 function App() {
@@ -124,6 +129,14 @@ if(isDoctor){
     <Route path="/allergy/:patID" exact>
       <PatientAllergy />
     </Route>
+    <Route path="/confirmappointment/:userID/:docID" exact>
+  
+        <ConfirmAppointment />
+    </Route>
+    <Route path="/denyappointment" exact>
+      <DenyAppointment />
+    </Route>
+
       <Redirect to="/home" />
   
     </Switch>
@@ -144,6 +157,12 @@ if(isDoctor){
       <Route path="/doctor/login" exact>
         <DoctorLogin />
       </Route>
+      <Route path="/confirmappointment/:userID/:docID" exact>
+      <ConfirmAppointment />
+    </Route>
+    <Route path="/denyappointment" exact>
+      <DenyAppointment />
+    </Route>
      <Redirect to="/" />
      </Switch>
     );
@@ -174,6 +193,21 @@ if (token) {
     <Route path="/appointment/:docID" exact>
       <Appointment />
     </Route>
+    <Route path="/rating/:docID" exact>
+      <Rating />
+    </Route>
+    <Route path="/doctorsprofile/:docID" exact>
+      <DoctorProfile />
+    </Route>
+    <Route path="/payment/:docID" exact>
+      <Payment />
+    </Route>
+    <Route path="/confirmappointment/:userID/:docID" exact>
+      <ConfirmAppointment />
+    </Route>
+    <Route path="/denyappointment" exact>
+      <DenyAppointment />
+    </Route>
     <Redirect to="/home" />
 
   </Switch>
@@ -194,9 +228,17 @@ else{
     <Route path="/doctor/login" exact>
         <DoctorLogin />
       </Route>
+
       <Route path="/doctor/signup" exact>
         <DoctorSignup />
       </Route>
+     
+      <Route path="/confirmappointment/:userID/:docID" exact>
+      <ConfirmAppointment />
+    </Route>
+    <Route path="/denyappointment" exact>
+      <DenyAppointment />
+    </Route>
    <Redirect to="/" />
    </Switch>
   );

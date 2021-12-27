@@ -21,7 +21,7 @@ function DoctorSignup() {
     var name =document.getElementById('name').value;
     try {
       const responseData = await sendRequest(
-        'http://localhost:5000/api/doctors/signup',
+        'https://localhost:5000/api/doctors/signup',
         'POST',
         JSON.stringify({
           name: name,

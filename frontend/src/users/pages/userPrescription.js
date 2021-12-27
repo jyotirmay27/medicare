@@ -17,7 +17,7 @@ useEffect(()=> {
   const fetchPlaces = async() =>{
     try{
       const responseData = await sendRequest(
-      `http://localhost:5000/api/places/users/${userId}/prescription`
+      `https://localhost:5000/api/places/users/${userId}/prescription`
       );
       setLoadedPres(responseData.Prescriptions);
     }

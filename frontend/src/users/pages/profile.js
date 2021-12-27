@@ -16,6 +16,7 @@ import UserAllergy  from './userAllergy';
 import UserDoctors from './userDoctors';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../shared/util/AuthContext';
+
 import "../../css/Profile.css";
 let items = [];
 for (let i = 0; i < 20; i++) {

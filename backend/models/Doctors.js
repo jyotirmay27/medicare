@@ -8,6 +8,7 @@ const doctorSchema = new Schema({
     email: { type: String , required: true , unique: true},//the database will contain a row for 'email' in it
     password:{ type: String , required: true },//the database will contain a row for 'password' in it
    // image:{ type: String , required: true},
+   rating:{ type: String  },
     prescriptions: [{ type: mongoose.Types.ObjectId , required: true, ref: 'Prescription'}], 
     // this array is designed to stord object Id created by mongodb
     patients: [{ type: String }]

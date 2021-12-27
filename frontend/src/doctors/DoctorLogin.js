@@ -19,7 +19,7 @@ const DoctorLogin = () => {
         var password = document.getElementById("pass").value;
         try {
             const responseData = await sendRequest(
-                "http://localhost:5000/api/doctors/login",
+                "https://localhost:5000/api/doctors/login",
                 "POST",
                 JSON.stringify({
                     email: email,

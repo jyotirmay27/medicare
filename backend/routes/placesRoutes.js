@@ -45,6 +45,10 @@ router.get('/users/:uid/medicines/:mid', placesControllers.getMedicinesById);
 /* this will fetch all patient's doctors */
 router.get('/users/:uid/yourdoctors', placesControllers.getYourDoctors);
 
+router.get('/users/doctorprofile/:did', placesControllers.getDoctorById);
+
+router.get('/users/review/:did', placesControllers.getReviewById);
+
 // this will route the post request for all the vitals entered by user to database
 router.post('/vitals',[
     check('sugar').not().isEmpty(),

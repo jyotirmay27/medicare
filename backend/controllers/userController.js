@@ -8,7 +8,11 @@ const bcrypt =require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const mongoose=require('mongoose');
 const Combo = require('../models/Combo');
+const Rating = require('../models/Rating');
 const nodemailer = require("nodemailer");
+const Reciepts = require('../models/Reciepts');
+const Razorpay = require("razorpay");
+require("dotenv").config();
 
 const signup =async  (req, res, next) => {
   const errors = validationResult(req); // this will validate the checks we put on user router file for name email and password.
@@ -16,7 +20,7 @@ const signup =async  (req, res, next) => {
     throw new HttpError('Invalid inputs passed, please check your data.', 422);
   }
   const { name, email, password } = req.body; // will recieve json data from front to process further
-
+  console.log(email);
   let existingUser;
   try {
     existingUser =await User.findOne({ email: email}) // find the email in database
@@ -203,17 +207,21 @@ var patName = name;
 var transporter = nodemailer.createTransport({ // it will provide the mail id password from the the site has to send mails whenever required.
     service: 'gmail',
     auth: {
-      user: 'meditech.atyourhelp@gmail.com',
-      pass: 'HelloWorld'
+      user: 'codingstrings.js@gmail.com',
+      pass: 'pizzapastasauce'
     }
   });
+  let f;
+  
   
   var mailOptions = { // this will set the content of the mail which the nodemailer will send.
-    from: 'meditech.atyourhelp@gmail.com',
+    from: 'codingstrings.js@gmail.com',
     to: docEmail,
     subject: 'Book an appointment',
     html: `<p>Hello Doctor,</p>
             <p>The patient ${patName} (${patEmail}) wants to book an appointment with you for ${date}.</p>
+            <a href= 'http://localhost:3000/confirmappointment/${patEmail}/${docEmail}'> click to confirm and add the time  </a>
+            <a href= "http://localhost:3000/denyappointment"> click to deny we'll send a mail to choose another date to the user  </a>
             <p>Regards MediTech</p>`
   };
   
@@ -230,7 +238,7 @@ var transporter = nodemailer.createTransport({ // it will provide the mail id pa
 
 const login =async  (req, res, next) => {
   const { email, password } = req.body;
-
+  console.log(email);
   let existingUser;
 
   try {
@@ -286,9 +294,219 @@ const login =async  (req, res, next) => {
   // this fetch the Prescriptions for the particular user
 };
 
+
+// TODO
+const updateRating = async (req, res, next) => {
+  // const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   throw new HttpError('Invalid inputs passed, please check your data.', 422);
+  // }
+
+  const { rating } = req.body;
+  const docId = req.params.did;
+
+  let place;
+  try {
+    place = await Doctor.findOne({ email: docId });
+  } catch (err) {
+    const error = new HttpError(
+      'Something went wrong, could not update place.',
+      500
+    );
+    return next(error);
+  }
+
+  place.rating = rating;
+
+
+  try {
+    await place.save();
+  } catch (err) {
+    const error = new HttpError(
+      'Something went wrong, could not update place.',
+      500
+    );
+    return next(error);
+  }
+    console.log("here are we at rating");
+  res.status(200).json({ message:"done" });
+};
+
+const addReview =async  (req, res, next) => {
+
+  const { review } = req.body;
+  const docId = req.params.did;
+  const createdRating =new Rating({
+    doctor:docId,
+      review:review
+});
+console.log(review);
+console.log("here we are at review");
+try {
+  const sess = await mongoose.startSession();
+   sess.startTransaction()// to transport data to database with condition the things inside 
+                        //start transaction and commit transaction either all tasks will be executed or none will.
+   await createdRating.save({ session: sess }); 
+   console.log("done");
+  await sess.commitTransaction();
+} catch (err) {
+  const error = new HttpError(
+    ' failed, please try again.',
+    500
+  );
+  return next(error);
+}
+
+res.status(201).json({message: 'review added!'});
+};
+
+const Payment =async  (req, res, next) => {
+
+  console.log("here we are")
+  try {
+    const instance = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_SECRET,
+    });
+    console.log("step1");
+    const options = {
+        amount: 100, // amount in smallest currency unit
+        currency: "INR",
+        receipt: "receipt_order_74394",
+    };
+    console.log(options);
+    console.log("step2");
+
+    ////const order = await instance.orders.create(options);
+    // const order = await instance.orders.create(options);
+    const order= await instance.orders.create(options, async function (err, order) {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          message: "Something Went Wrong",
+        });
+      }
+    return res.status(200).json(order);
+   });
+    console.log({order});
+    console.log("step3");
+    if (!order) return res.status(500).send("Some error occured");
+
+    res.json(order);
+} catch (error) {
+    res.status(500).send(error);
+}
+}
+
+
+const bookAnAppointment =async  (req, res, next) => {
+  const { date, time, userID, docID } = req.body;
+  
+
+
+//var patName = name;
+
+
+var transporter = nodemailer.createTransport({ // it will provide the mail id password from the the site has to send mails whenever required.
+    service: 'gmail',
+    auth: {
+      user: 'codingstrings.js@gmail.com',
+      pass: 'pizzapastasauce'
+    }
+  });
+  let f=userID+docID;
+  
+  
+  var mailOptions = { // this will set the content of the mail which the nodemailer will send.
+    from: 'meditech.appointment@gmail.com',
+    to: docID,
+    subject: 'Confirmation of Appointment',
+    html: `<p>Hello Doctor,</p>
+            <p>The patient  (${userID}) has  booked an appointment with you for ${date} at (${time}).</p>
+            <a href="https://localhost:5000/room1/${f}"> Link to th video call </a>
+            <p>Regards MediTech</p>`
+  };
+  var mailOptions2 = { // this will set the content of the mail which the nodemailer will send.
+    from: 'meditech.appointment@gmail.com',
+    to: userID,
+    subject: 'Confirmation of Appointment',
+    html: `<p>Hello Patient,</p>
+            <p>The doctor  (${docID}) has booked an appointment with you for ${date} at (${time}).</p>
+            <a href="https://localhost:5000/room1/${f}"> Link to th video call </a>
+            <p>Regards MediTech</p>`
+  };
+  
+  transporter.sendMail(mailOptions, function(error, info){ // it will trigger and a mail will be sent to the id provided by user 
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+  transporter.sendMail(mailOptions2, function(error, info){ // it will trigger and a mail will be sent to the id provided by user 
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+  res.json({message: 'Mail Sent!'});
+};
+
+
+const cancelAnAppointment =async  (req, res, next) => {
+  const { userID, docID } = req.body;
+  
+
+
+//var patName = name;
+
+
+var transporter = nodemailer.createTransport({ // it will provide the mail id password from the the site has to send mails whenever required.
+    service: 'gmail',
+    auth: {
+      user: 'codingstrings.js@gmail.com',
+      pass: 'pizzapastasauce'
+    }
+  });
+  let f;
+  
+  
+  var mailOptions = { // this will set the content of the mail which the nodemailer will send.
+    from: 'meditech.appointment@gmail.com',
+    to: userID,
+    subject: 'Confirmation of Appointment',
+    html: `<p>Hello Patient,</p>
+            <p>The doctor (${docID}) is busy on ${date} please choose som other day for the appointment.</p>
+            <p>Regards MediTech</p>`
+  };
+  // var mailOptions2 = { // this will set the content of the mail which the nodemailer will send.
+  //   from: 'meditech.appointment@gmail.com',
+  //   to: userID,
+  //   subject: 'Confirmation of Appointment',
+  //   html: `<p>Hello Patient,</p>
+  //           <p>The doctor  (${userID}) has booked an appointment with you for ${date} at (${time}).</p>
+  //           <p>Regards MediTech</p>`
+  // };
+  
+  transporter.sendMail(mailOptions, function(error, info){ // it will trigger and a mail will be sent to the id provided by user 
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+  res.json({message: 'Mail Sent!'});
+};
+
 // and finally export all files.
 exports.addDoctors=addDoctors;
 exports.addallergy=addallergy;
 exports.signup = signup;
 exports.login = login;
 exports.Appointment=Appointment;
+exports.updateRating=updateRating;
+exports.addReview=addReview;
+exports.Payment=Payment;
+exports.bookAnAppointment=bookAnAppointment;
+exports.cancelAnAppointment=cancelAnAppointment;
